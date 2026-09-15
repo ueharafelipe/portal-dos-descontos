@@ -5,6 +5,27 @@
     <title>Portal dos Descontos - Achados Imperdíveis.</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script>
+      (function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = true;
+        n.version = '2.0';
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = true;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+
+      fbq('init', '1519711453243701');
+      fbq('track', 'PageView');
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;800&amp;family=Outfit:wght@300;400;700&amp;display=swap" rel="stylesheet">
@@ -46,6 +67,7 @@
     </style>
 </head>
 <body>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1519711453243701&ev=PageView&noscript=1" /></noscript>
     <div class="min-h-screen relative overflow-hidden" data-sd-id="1">
         <!-- Decorative Background Elements -->
         <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-red-600/10 blur-[120px] rounded-full -z-10 translate-x-1/2 -translate-y-1/2" data-sd-id="2"></div>
@@ -86,7 +108,7 @@
                     </p>
 
                     <div class="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start" data-sd-id="23">
-                        <a href="#" id="hero-cta-whatsapp" class="glow-btn bg-gradient-brand px-10 py-5 rounded-2xl font-bold text-lg flex items-center gap-3 group" data-sd-id="24">
+                        <a href="#" id="hero-cta-whatsapp" data-lead-content="Hero CTA WhatsApp" class="glow-btn bg-gradient-brand px-10 py-5 rounded-2xl font-bold text-lg flex items-center gap-3 group" data-sd-id="24">
                             ENTRAR NO GRUPO AGORA
                             <iconify-icon icon="lucide:arrow-right" class="group-hover:translate-x-1 transition-transform"></iconify-icon>
                         </a>
@@ -206,7 +228,7 @@
                 <p class="text-white/80 text-lg mb-10 max-w-xl mx-auto relative z-10" data-sd-id="83">
                     Junte-se a maior comunidade de achados fitness do Brasil. 100% Gratuito, 100% Vantajoso.
                 </p>
-                <a href="#" id="footer-cta-whatsapp" class="inline-flex items-center gap-3 bg-white text-[#FF0055] px-12 py-5 rounded-2xl font-black text-xl hover:shadow-2xl transition-all hover:-translate-y-1 relative z-10" data-sd-id="84">
+                <a href="#" id="footer-cta-whatsapp" data-lead-content="Final CTA WhatsApp" class="inline-flex items-center gap-3 bg-white text-[#FF0055] px-12 py-5 rounded-2xl font-black text-xl hover:shadow-2xl transition-all hover:-translate-y-1 relative z-10" data-sd-id="84">
                     ENTRAR NO WHATSAPP AGORA
                 </a>
                 <p class="text-white/60 text-sm mt-6 relative z-10 italic" data-sd-id="85">
@@ -228,4 +250,60 @@
         </footer>
     </div>
 
+    <script>
+      const WHATSAPP_GROUP_URL = 'https://bot.promosoldmoney.com.br/api/public/proximo-link';
+
+      function trackLeadAndRedirect(event, contentName) {
+        event.preventDefault();
+
+        const target = event.currentTarget;
+        const destinationUrl = target && target.href;
+        const leadSource = contentName || (target && target.dataset.leadContent) || 'WhatsApp CTA';
+
+        if (typeof fbq === 'function') {
+          fbq('track', 'CompleteRegistration', {
+            content_name: leadSource,
+            content_category: 'portal_dos_descontos',
+            destination: 'whatsapp_group',
+          });
+        }
+
+        if (destinationUrl) {
+          setTimeout(function () {
+            window.location.href = destinationUrl;
+          }, 700);
+        }
+      }
+
+      const heroCta = document.getElementById('hero-cta-whatsapp');
+      const finalCta = document.getElementById('footer-cta-whatsapp');
+
+      if (heroCta) {
+        heroCta.href = WHATSAPP_GROUP_URL;
+      }
+
+      if (finalCta) {
+        finalCta.href = WHATSAPP_GROUP_URL;
+      }
+
+      if (heroCta) {
+        heroCta.addEventListener('click', function (event) {
+          trackLeadAndRedirect(event, 'Hero CTA WhatsApp');
+        });
+      }
+
+      if (finalCta) {
+        finalCta.addEventListener('click', function (event) {
+          trackLeadAndRedirect(event, 'Final CTA WhatsApp');
+        });
+      }
+
+      document.addEventListener('click', function (event) {
+        const link = event.target.closest('a[href*="chat.whatsapp.com"]');
+        if (!link) return;
+        if (link.id === 'hero-cta-whatsapp' || link.id === 'footer-cta-whatsapp') return;
+
+        trackLeadAndRedirect(event, link.dataset.leadContent || 'WhatsApp CTA');
+      });
+    </script>
 </body></html>
