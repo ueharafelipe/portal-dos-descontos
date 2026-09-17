@@ -253,25 +253,33 @@
     <script>
       const WHATSAPP_GROUP_URL = 'https://chat.whatsapp.com/EJKvgjjRF9e3R50q87xL2a';
 
-      function trackLeadAndRedirect(event, contentName) {
-        event.preventDefault();
-
-        const target = event.currentTarget;
-        const destinationUrl = target && target.href;
-        const leadSource = contentName || (target && target.dataset.leadContent) || 'WhatsApp CTA';
+      function trackLeadClick(contentName) {
+        const leadSource = contentName || 'WhatsApp CTA';
+        console.log('[Pixel Debug] trackLeadClick', leadSource);
 
         if (typeof fbq === 'function') {
+          console.log('[Pixel Debug] firing fbq', leadSource);
           fbq('track', 'CompleteRegistration', {
             content_name: leadSource,
             content_category: 'portal_dos_descontos',
             destination: 'whatsapp_group',
           });
+        } else {
+          console.warn('[Pixel Debug] fbq not available yet');
         }
+      }
 
-        if (destinationUrl) {
-          setTimeout(function () {
-            window.location.href = destinationUrl;
-          }, 700);
+      function openWhatsappGroup(contentName) {
+        trackLeadClick(contentName);
+
+        console.log('[Pixel Debug] attempting WhatsApp open', WHATSAPP_GROUP_URL);
+        const popup = window.open(WHATSAPP_GROUP_URL, '_blank');
+
+        if (popup) {
+          console.log('[Pixel Debug] popup opened successfully');
+        } else {
+          console.warn('[Pixel Debug] popup blocked, fallback redirect');
+          window.location.href = WHATSAPP_GROUP_URL;
         }
       }
 
@@ -280,21 +288,17 @@
 
       if (heroCta) {
         heroCta.href = WHATSAPP_GROUP_URL;
-      }
-
-      if (finalCta) {
-        finalCta.href = WHATSAPP_GROUP_URL;
-      }
-
-      if (heroCta) {
         heroCta.addEventListener('click', function (event) {
-          trackLeadAndRedirect(event, 'Hero CTA WhatsApp');
+          event.preventDefault();
+          openWhatsappGroup('Hero CTA WhatsApp');
         });
       }
 
       if (finalCta) {
+        finalCta.href = WHATSAPP_GROUP_URL;
         finalCta.addEventListener('click', function (event) {
-          trackLeadAndRedirect(event, 'Final CTA WhatsApp');
+          event.preventDefault();
+          openWhatsappGroup('Final CTA WhatsApp');
         });
       }
 
@@ -303,7 +307,8 @@
         if (!link) return;
         if (link.id === 'hero-cta-whatsapp' || link.id === 'footer-cta-whatsapp') return;
 
-        trackLeadAndRedirect(event, link.dataset.leadContent || 'WhatsApp CTA');
+        event.preventDefault();
+        openWhatsappGroup(link.dataset.leadContent || 'WhatsApp CTA');
       });
     </script>
 </body></html>
